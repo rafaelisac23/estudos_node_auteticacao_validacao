@@ -1,0 +1,4 @@
+## Como funciona
+
+-Basic Auth
+Toda requisição que fizer voce tambem vai ter que mandar o usuario e a senha nos headers
