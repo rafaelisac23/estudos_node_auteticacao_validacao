@@ -2,3 +2,10 @@
 
 -Basic Auth
 Toda requisição que fizer voce tambem vai ter que mandar o usuario e a senha nos headers
+
+-JWT
+
+Vantagem: colocar informações sobre o usuario para o front
+
+1 passo - criar chave no .env
+2 instalar o jsonwebtoken para criar o token - npm i jsonwebtoken

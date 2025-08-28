@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
+import JWT from "jsonwebtoken";
 import { User } from "../models/User";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const ping = (req: Request, res: Response) => {
   res.json({ pong: true });
@@ -36,7 +40,15 @@ export const login = async (req: Request, res: Response) => {
     });
 
     if (user) {
-      res.status(200).json({ status: true });
+      //adcionando para jwt
+      //1 parametro - objeto com o que vai armazenar no token
+      //2 parametro - chave privada do .env
+      // 3 parametro -  tempo de duração do token = {expiresIn:'2h'} -> 2 horas
+      const token = JWT.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_SECRET_KEY as string
+      );
+      res.status(200).json({ status: true, token });
       return;
     }
   }

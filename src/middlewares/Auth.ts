@@ -3,6 +3,7 @@ import { User } from "../models/User";
 
 type AuthType = {
   basicAuth: RequestHandler;
+  JWTAuth: RequestHandler;
 };
 
 export const Auth: AuthType = {
@@ -41,4 +42,6 @@ export const Auth: AuthType = {
       res.status(403).json({ error: "Not Authorized" });
     }
   },
+
+  JWTAuth: (req, res, next) => {},
 };
