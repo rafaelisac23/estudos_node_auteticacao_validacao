@@ -1,5 +1,9 @@
 import { RequestHandler } from "express";
 import { User } from "../models/User";
+import JWT from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 type AuthType = {
   basicAuth: RequestHandler;
@@ -43,5 +47,31 @@ export const Auth: AuthType = {
     }
   },
 
-  JWTAuth: (req, res, next) => {},
+  JWTAuth: async (req, res, next) => {
+    let success = false;
+
+    // fazer verificação de JWTAuth
+    if (req.headers.authorization) {
+      //Padrao no header e no que vem na req -> Bearer Token
+      // aqui ele ja ta pegando e separando o authorization do header
+      const [authType, token] = req.headers.authorization.split(" ");
+      //Verifica se a autoização é um Bearer
+      if (authType === "Bearer") {
+        try {
+          //Validar o token
+          const decoded = JWT.verify(
+            token,
+            process.env.JWT_SECRET_KEY as string
+          );
+          success = true;
+        } catch (err) {}
+      }
+    }
+
+    if (success) {
+      next();
+    } else {
+      res.status(403).json({ error: "Not Authorized" });
+    }
+  },
 };
