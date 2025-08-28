@@ -10,9 +10,8 @@ export const ping = (req: Request, res: Response) => {
 };
 
 export const register = async (req: Request, res: Response) => {
-  console.log(req.body);
-  console.log(req.params);
-
+  // aqui é interessante ja gerar um token tambem
+  //caso voce queira registrar e ja logar a pessoa
   if (req.body.email && req.body.password) {
     let { email, password } = req.body;
 
@@ -20,14 +19,19 @@ export const register = async (req: Request, res: Response) => {
     if (!hasUser) {
       let newUser = await User.create({ email, password });
 
-      res.status(201);
-      res.json({ id: newUser.id });
+      const token = JWT.sign(
+        { id: newUser.id, email: newUser.email },
+        process.env.JWT_SECRET_KEY as string
+      );
+
+      return res.status(201);
+      res.json({ id: newUser.id, token });
     } else {
-      res.status(401).json({ error: "E-mail já existe." });
+      return res.status(401).json({ error: "E-mail já existe." });
     }
   }
 
-  res.status(400).json({ error: "E-mail e/ou senha não enviados." });
+  return res.status(400).json({ error: "E-mail e/ou senha não enviados." });
 };
 
 export const login = async (req: Request, res: Response) => {
